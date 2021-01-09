@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // SizedBox(height: 30.0),
-            Text("Enter a vote code", style: GoogleFonts.frankRuhlLibre()),
+            Text("Enter a vote code"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,9 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: TextFormField(
                         controller: TextEditingController(),
                         keyboardType: TextInputType.number,
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                         decoration: const InputDecoration(
-                          hintText: "Enter the election code",
                           border: InputBorder.none,
+                          labelText: 'Vote Code',
+                          hintText: "Enter the election code",
+                          hintStyle: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.normal),
                           prefixIcon: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Icon(
@@ -73,13 +82,18 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ActionBox(
-                  action: "New Vote",
-                  description: "Create a new vote",
-                  image: Icons.how_to_vote,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, 'create_vote');
+                  },
+                  child: ActionBox(
+                    action: "Vote",
+                    description: "Create a new vote",
+                    image: Icons.how_to_vote,
+                  ),
                 ),
                 ActionBox(
-                    action: "New Something",
+                    action: "Poll",
                     description: "Create a new poll",
                     image: Icons.poll),
               ],
@@ -89,16 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ActionBox(
-                  action: "New Vote",
+                  action: "Election",
                   description: "Create a new vote",
-                  image: Icons.how_to_vote,
+                  image: Icons.ballot,
                 ),
                 ActionBox(
-                    action: "New Something",
+                    action: "ElectChain",
                     description: "Create a new poll",
-                    image: Icons.poll),
+                    image: Icons.info),
               ],
-            )
+            ),
           ],
         ),
       ),

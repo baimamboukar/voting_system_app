@@ -1,8 +1,10 @@
 import 'package:Electchain/config/styles.dart';
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'widgets/drawer.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,17 +14,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.zoom,
       title: 'ElectChain',
       theme: ThemeData(
-        textTheme: TextTheme(
-            button: GoogleFonts.yanoneKaffeesatz(color: Colors.white)),
-        fontFamily: "Yanone",
+        textTheme:
+            GoogleFonts.yanoneKaffeesatzTextTheme(Theme.of(context).textTheme),
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: ElectChain(),
+      initialRoute: '/',
+      routes: {
+        'auth': (context) => AuthScreen(),
+        'settings': (context) => ElectChain(),
+        'profile': (context) => ElectChain(),
+        'create_vote': (context) => NewVote(),
+      },
     );
   }
 }
@@ -33,11 +42,18 @@ class ElectChain extends StatefulWidget {
 }
 
 class _ElectChainState extends State<ElectChain> {
+  final GlobalKey _scafflofKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo[100],
+      key: _scafflofKey,
       appBar: AppBar(
-        leading: Icon(Icons.dashboard),
+        //  leading: IconButton(
+        //   icon: Icon(Icons.dashboard),
+        //  onPressed: () {
+        //     Scaffold.of(context).openDrawer();
+        // }),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -49,9 +65,9 @@ class _ElectChainState extends State<ElectChain> {
         title: Shimmer.fromColors(
           baseColor: Colors.white,
           highlightColor: Colors.blue,
-          child: Text('Electchain',
+          child: Text('ElectChain',
               style: GoogleFonts.loversQuarrel(
-                  fontSize: 52.0, fontWeight: FontWeight.bold)),
+                  fontSize: 48.0, fontWeight: FontWeight.bold)),
         ),
         actions: [
           // ignore: missing_required_param
@@ -59,13 +75,24 @@ class _ElectChainState extends State<ElectChain> {
           IconButton(
               color: Colors.white,
               icon: Icon(Icons.how_to_vote_rounded),
-              onPressed: () => print('New vote is being added')),
+              onPressed: () {}),
           Container(
             decoration: BoxDecoration(shape: BoxShape.circle),
             child: IconButton(
                 color: Colors.white,
                 icon: Icon(Icons.info_outline_rounded),
-                onPressed: () => print('New vote is being added')),
+                onPressed: () {
+                  showAboutDialog(
+                      context: context,
+                      applicationVersion: '^1.0.0',
+                      applicationIcon: CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage('assets/icons/icon.png'),
+                      ),
+                      applicationName: 'ElectChain',
+                      applicationLegalese: 'Brave Tech Solutions');
+                }),
           ),
         ],
       ),
@@ -79,6 +106,7 @@ class _ElectChainState extends State<ElectChain> {
               onPressed: () => print('How to vote')),
         ),
       ),
+      drawer: CustomDrawer(),
     );
   }
 }
