@@ -1,21 +1,24 @@
-import 'package:Electchain/controllers/add_vote_option.dart';
-import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/bidings/add_candidate_binding.dart';
+import 'package:Electchain/screens/add_candidate.dart';
+import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:Electchain/widgets/input_field.dart';
 import 'package:get/get.dart';
+import 'package:Electchain/controllers/controllers.dart';
+import 'package:Electchain/services/database.dart';
 
-class VoteOptionWidget extends StatefulWidget {
+class AddVoteOptionWidget extends StatefulWidget {
   @override
-  _VoteOptionWidgetState createState() => _VoteOptionWidgetState();
+  _AddVoteOptionWidgetState createState() => _AddVoteOptionWidgetState();
 }
 
-class _VoteOptionWidgetState extends State<VoteOptionWidget> {
+class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
   @override
   Widget build(BuildContext context) {
+    print(Get.arguments);
     var _candidateNameController = TextEditingController();
     var _candidateDescriptionController = TextEditingController();
-    VoteOptionController _voteOptionController =
-        Get.put(VoteOptionController());
+    Get.put(ElectionController());
+
     return Scaffold(
       body: Container(
         child: Column(
@@ -24,7 +27,7 @@ class _VoteOptionWidgetState extends State<VoteOptionWidget> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(
-                'ADD OPTION OR CANDIDATE',
+                'ADD OPTION OR CANDIDATE ${Get.arguments[0].id.toString()}',
                 style: TextStyle(
                     fontSize: 22.0,
                     color: Colors.indigo,
@@ -53,27 +56,32 @@ class _VoteOptionWidgetState extends State<VoteOptionWidget> {
               prefixIcon: Icons.person,
               hintText: 'Candidate\'s names',
               controller: _candidateNameController,
+              obscure: false,
             ),
             InputField(
-              prefixIcon: Icons.person,
+              prefixIcon: Icons.edit,
               hintText: 'Candidates\'s description',
               controller: _candidateDescriptionController,
+              obscure: false,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: IconButton(
-            icon: Icon(
-              Icons.check_circle,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              _voteOptionController.addOption(_candidateNameController.text,
-                  _candidateDescriptionController.text);
-              Get.to(NewVote());
-            }),
+        onPressed: () async {
+          var result = await DataBase().addCandidate(
+              Get.arguments[0].id.toString(),
+              _candidateNameController.text,
+              _candidateDescriptionController.text);
+
+          if (result) {
+            Get.back();
+          }
+        },
+        child: Icon(
+          Icons.check_circle,
+          color: Colors.green,
+        ),
       ),
     );
   }

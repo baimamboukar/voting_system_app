@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:get/get.dart';
 
 class VoteDashboard extends StatefulWidget {
   @override
@@ -12,18 +14,21 @@ class _VoteDashboardState extends State<VoteDashboard> {
   static List<charts.Series<Vote, String>> _randomData() {
     final random = Random();
     final voteData = [
-      Vote('Flutter', random.nextInt(1000)), //Davna
-      Vote('Vue', random.nextInt(1000)), //Bana
-      Vote('React', random.nextInt(1000)), //Bavdam
-      Vote('Angular', random.nextInt(1000)), //Khalimat
-      Vote('Ember', random.nextInt(1000))
+      Vote('Flutter', random.nextInt(10000), Colors.black), //Davna
+      Vote('Vue', random.nextInt(10000), Colors.deepPurple), //Bana
+      Vote('Ember', random.nextInt(10000), Colors.indigo), //Grace
+      Vote('Svelte', random.nextInt(10000), Colors.blue), //Bisama
+      Vote('Polymer', random.nextInt(10000), Colors.deepOrange), //Abenti
+      Vote('React', random.nextInt(10000), Colors.brown), //Next
+      Vote('Angular', random.nextInt(10000), Colors.cyan), //Grace
+      Vote('Node', random.nextInt(10000), Colors.green),
     ];
     return [
       charts.Series<Vote, String>(
           id: 'Best Framework',
           labelAccessorFn: (Vote votes, _) => votes.voter,
-          // colorFn: (Vote votes, _) =>
-          // charts.ColorUtil.fromDartColor(votes.voterColor),
+          colorFn: (Vote votes, _) =>
+              charts.ColorUtil.fromDartColor(votes.voterColor),
           domainFn: (Vote votes, _) => votes.voter,
           measureFn: (Vote votes, _) => votes.voteCount,
           data: voteData)
@@ -52,57 +57,112 @@ class _VoteDashboardState extends State<VoteDashboard> {
         slivers: [
           SliverAppBar(
             leading: Icon(Icons.dashboard),
-            collapsedHeight: 100.0,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image(image: AssetImage('assets/icons/logo.png')),
-              title: Text('BEST MOBILE FRAMEWORK',
+            title: Column(
+              children: [
+                Text(
+                  'BEST WEB APP FRAMEWORK',
+                  style:
+                      GoogleFonts.yanoneKaffeesatz(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Lorem ipsum dolor si amet do set consectur',
                   style: GoogleFonts.yanoneKaffeesatz(
-                      fontSize: 25.0, fontWeight: FontWeight.bold)),
+                      fontWeight: FontWeight.normal),
+                ),
+              ],
             ),
+            actions: [
+              IconButton(
+                  tooltip: 'Copy election access code',
+                  icon: Icon(
+                    Icons.content_copy,
+                    color: Colors.white,
+                  ),
+                  onPressed: null)
+            ],
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
             sliver: SliverToBoxAdapter(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _StatsBox(Icons.how_to_vote, 'VOTE', '8113'),
                   _StatsBox(Icons.people_alt, 'CANDIDATES', '4'),
-                  _StatsBox(Icons.ballot, 'VIEWS', '4')
+                  _StatsBox(Icons.lock_clock, '12:55', '4H')
                 ],
               ),
             ),
           ),
           SliverToBoxAdapter(
-            child: Row(
+            child: Column(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  width: MediaQuery.of(context).size.width * 0.50,
-                  //  color: Colors.amber,
+                  height: MediaQuery.of(context).size.height * 0.40,
+                  width: MediaQuery.of(context).size.width,
+                  //color: Colors.black12,
                   child: charts.BarChart(
                     seriesList,
                     animate: true,
+                    behaviors: [
+                      charts.DatumLegend(
+                        outsideJustification:
+                            charts.OutsideJustification.middleDrawArea,
+                        horizontalFirst: false,
+                        desiredMaxRows: 2,
+                      )
+                    ],
                   ),
                 ),
-                Column(
+                Row(
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.275,
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      // color: Colors.green,
+                      height: MediaQuery.of(context).size.height * 0.30,
+                      width: MediaQuery.of(context).size.width * 0.60,
+                      // color: Colors.pinkAccent.withOpacity(.5),
                       child: charts.PieChart(
                         seriesList,
                         animate: true,
+                        animationDuration: Duration(seconds: 2),
                       ),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.275,
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      // color: Colors.pinkAccent,
-                      child: Text('CHART VIEWS'),
-                    )
+                        height: MediaQuery.of(context).size.height * 0.30,
+                        width: MediaQuery.of(context).size.width * 0.40,
+                        //color: Colors.teal.shade200,
+                        child: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: ListView(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    'OWNER ACTIONS',
+                                    style: TextStyle(
+                                        color: Colors.indigo, fontSize: 18.0),
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.stop,
+                                      color: Colors.red,
+                                    ),
+                                    label: Text('Stop Election')),
+                                ElevatedButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.copy,
+                                    ),
+                                    label: Text('Copy Access code')),
+                                ElevatedButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.bar_chart,
+                                      semanticLabel: 'Chart',
+                                    ),
+                                    label: Text('Get Election\'s stats'))
+                              ],
+                            )))
                   ],
                 )
               ],
@@ -110,43 +170,11 @@ class _VoteDashboardState extends State<VoteDashboard> {
           )
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.indigo,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white.withOpacity(0.40),
-        selectedIconTheme:
-            IconThemeData(color: Colors.white, size: 25.0, opacity: 1),
-        unselectedIconTheme: IconThemeData(
-            color: Colors.white.withOpacity(0.40), size: 22.0, opacity: 0.4),
-        selectedFontSize: 18,
-        unselectedFontSize: 14,
-        onTap: (index) {
-          updateIndex(index);
-        },
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.how_to_vote, color: Colors.white),
-              label: 'Dashboard'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.people_alt,
-                color: Colors.white,
-              ),
-              label: 'Voters'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.info,
-                color: Colors.white,
-              ),
-              label: 'Info'),
-        ],
-      ),
     );
   }
 }
 
+// ignore: non_constant_identifier_names
 Widget _StatsBox(IconData icon, String title, String count) {
   return Container(
     padding: const EdgeInsets.all(8.0),
@@ -188,6 +216,7 @@ Widget _StatsBox(IconData icon, String title, String count) {
 class Vote {
   final String voter;
   final int voteCount;
+  final Color voterColor;
 
-  Vote(this.voter, this.voteCount);
+  Vote(this.voter, this.voteCount, this.voterColor);
 }

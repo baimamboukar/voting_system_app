@@ -1,6 +1,92 @@
-import 'package:Electchain/widgets/action_box.dart';
+import 'package:Electchain/config/styles.dart';
+import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+class ElectChain extends StatefulWidget {
+  @override
+  _ElectChainState createState() => _ElectChainState();
+}
+
+class _ElectChainState extends State<ElectChain> {
+  final GlobalKey _scafflofKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.indigo[100],
+      key: _scafflofKey,
+      appBar: AppBar(
+        //  leading: IconButton(
+        //   icon: Icon(Icons.dashboard),
+        //  onPressed: () {
+        //     Scaffold.of(context).openDrawer();
+        // }),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[Colors.indigo, Colors.blue])),
+        ),
+        elevation: 0.0,
+        title: RichText(
+          text: TextSpan(children: [
+            TextSpan(
+                text: 'ELECT',
+                style: GoogleFonts.gugi(
+                    color: Colors.pink[300],
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold)),
+            TextSpan(
+                text: 'CHAIN',
+                style: GoogleFonts.gugi(
+                    fontSize: 18.0, fontWeight: FontWeight.bold))
+          ]),
+        ),
+        actions: [
+          // ignore: missing_required_param
+
+          IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.how_to_vote_rounded),
+              onPressed: () {}),
+          Container(
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.info_outline_rounded),
+                onPressed: () {
+                  showAboutDialog(
+                      context: context,
+                      applicationVersion: '^1.0.0',
+                      applicationIcon: CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage('assets/icons/icon.png'),
+                      ),
+                      applicationName: 'ElectChain',
+                      applicationLegalese: 'Brave Tech Solutions');
+                }),
+          ),
+        ],
+      ),
+      body: HomeScreen(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.to(NewVote()),
+        child: Container(
+          decoration: BoxStyles.gradientBox,
+          child: IconButton(
+              icon: Icon(Icons.how_to_vote_rounded),
+              onPressed: () => print('How to vote')),
+        ),
+      ),
+      drawer: CustomDrawer(),
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -84,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, 'create_vote');
+                    Get.to(NewVote());
                   },
                   child: ActionBox(
                     action: "Vote",

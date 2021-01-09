@@ -1,3 +1,5 @@
+import 'package:Electchain/controllers/auth_controller.dart';
+import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,25 +24,34 @@ class _CustomDrawerState extends State<CustomDrawer> {
         color: Colors.indigo[100],
         child: ListView(padding: EdgeInsets.all(0.0), children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text(
-              'Baimam Boukar',
-              style: TextStyle(fontSize: 22.0),
+            accountName: Obx(
+              () => Text(Get.find<UserController>().user.name),
             ),
-            accountEmail:
-                Text('ID 81132002', style: TextStyle(color: Colors.grey)),
+            accountEmail: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Obx(
+                  () => Text(Get.find<UserController>().user.email,
+                      style: TextStyle(color: Colors.white54)),
+                ),
+                Obx(
+                  () => Text(Get.find<UserController>().user.phoneNumber,
+                      style: TextStyle(color: Colors.white54)),
+                ),
+              ],
+            ),
             currentAccountPicture: CircleAvatar(
+              radius: 60.0,
               backgroundImage: AssetImage('assets/icons/user.jpeg'),
             ),
             otherAccountsPictures: <Widget>[
-              CircleAvatar(
-                child: Text('B'),
-                backgroundColor: Colors.indigo,
-              ),
-              CircleAvatar(
-                child: Text('JJ'),
-              ),
+              Icon(
+                Icons.notification_important,
+                color: Colors.white,
+              )
             ],
-            onDetailsPressed: () {},
+            // onDetailsPressed: () {},
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -72,15 +83,33 @@ class _CustomDrawerState extends State<CustomDrawer> {
             subtitle: Text('About ElectChain'),
             leading: _leadingIcon(Icons.info),
             trailing: Icon(Icons.keyboard_arrow_right),
-            onLongPress: () {},
+            onTap: () {
+              showAboutDialog(
+                  context: context,
+                  applicationVersion: '^1.0.0',
+                  applicationIcon: CircleAvatar(
+                    radius: 30.0,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage('assets/icons/icon.png'),
+                  ),
+                  applicationName: 'ElectChain',
+                  applicationLegalese: 'Brave Tech Solutions');
+            },
           ),
           ListTile(
-              title: Text('Log Out'),
-              subtitle: Text('Log out'),
-              leading: _leadingIcon(Icons.logout),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onLongPress: () {},
-              onTap: () => Navigator.pushNamed(context, 'auth')),
+            title: Text('Log Out'),
+            subtitle: Text('Log out'),
+            leading: _leadingIcon(Icons.logout),
+            trailing: Icon(Icons.arrow_forward_ios),
+            // onLongPress: () {
+            //   Get.find<AuthController>().signOut();
+            //   Get.snackbar(
+            //       'SIGN OUT', 'You have been successfully signed out');
+            // },
+            onTap: () {
+              Get.find<AuthController>().signOut();
+            },
+          ),
           Spacer(),
           Image(
             // color: Color,

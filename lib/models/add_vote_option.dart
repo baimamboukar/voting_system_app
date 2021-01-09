@@ -1,7 +1,7 @@
-class VoteOption {
-  final String image;
-  final String name;
-  final String description;
+class CandidateModel {
+  String imgUrl;
+  String name;
+  String description;
 
-  VoteOption({this.image, this.name, this.description});
+  CandidateModel({this.imgUrl, this.name, this.description});
 }
