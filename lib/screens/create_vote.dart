@@ -121,7 +121,6 @@ class NewVote extends StatelessWidget {
                   await _electionController.createElection(
                     _electionNameController.text,
                     _electionDescriptionController.text,
-                    Get.find<UserController>().user,
                     _electionStartDateController.text,
                     _electionEndDateController.text,
                   );
@@ -147,7 +146,6 @@ class NewVote extends StatelessWidget {
             _electionController.createElection(
               _electionNameController.text,
               _electionDescriptionController.text,
-              Get.find<UserController>().user,
               _electionStartDateController.text,
               _electionEndDateController.text,
             );

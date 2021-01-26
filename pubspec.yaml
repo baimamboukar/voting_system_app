@@ -33,10 +33,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   get: ^3.22.2
-  velocity_x: ^1.0.1
   http: ^0.12.2
   charts_flutter: ^0.9.0
-  timeline_tile: ^1.0.0
   loading: ^1.0.2
   flutter_launcher_icons: ^0.8.0
   flutter_launcher_name: ^0.0.1
@@ -44,14 +42,13 @@ dev_dependencies:
   splashscreen: ^1.3.5
   shimmer: ^1.1.2
   date_time_picker: ^1.1.0
-  flutter_countdown_timer: ^1.6.0
   image_picker: ^0.6.6+5
   cloud_firestore: ^0.14.4
   firebase_core: ^0.5.3
   cloud_functions: ^0.7.2
   firebase_auth: ^0.18.4+1
   firebase_storage: ^5.2.0
-  pull_to_refresh: ^1.6.3
+  smart_select: ^4.3.2
 
 
 

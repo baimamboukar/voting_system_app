@@ -8,13 +8,18 @@ import 'package:firebase_core/firebase_core.dart';
 class DataBase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _uid = Get.find<UserController>().user.id;
+  List<UserModel> allUsers = List<UserModel>();
+  List<ElectionModel> allElections = List<ElectionModel>();
+  ElectionModel indexedElection = ElectionModel();
+  ElectionController electionController = Get.put(ElectionController());
   DocumentReference _electionRef;
   Future<bool> createNewUser(UserModel user) async {
     try {
       await _firestore.collection('users').doc(user.id).set({
         "name": user.name,
         "phonenumber": user.phoneNumber,
-        "email": user.email
+        "email": user.email,
+        "owned_elections": []
       });
       return true;
     } catch (err) {
@@ -48,7 +53,10 @@ class DataBase {
         'endDate': election.endDate,
         'accessCode': election.accessCode,
       }).then((reference) {
-        print('The response was $reference');
+        _firestore.collection('users').doc(_uid).update({
+          "owned_elections": FieldValue.arrayUnion([reference.id])
+        });
+
         Get.to(AddCandidate(), arguments: [reference, election]);
       });
       return _electionRef;
@@ -93,5 +101,19 @@ class DataBase {
         .doc(_electionId)
         .get();
     return data;
+  }
+
+  Future<ElectionModel> getElection(String _uid, String _electionID) async {
+    var data = await _firestore
+        .collection('users')
+        .doc(_uid)
+        .collection('elections')
+        .doc(_electionID)
+        .get();
+    return Get.find<ElectionController>().fromDocumentSnapshot(data);
+  }
+
+  Future<ElectionModel> getElectionByAccessCode(String _electionID) async {
+    return indexedElection;
   }
 }

@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0-nullsafety.1"
-  auto_size_text:
-    dependency: transitive
-    description:
-      name: auto_size_text
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -237,13 +230,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_countdown_timer:
-    dependency: "direct dev"
-    description:
-      name: flutter_countdown_timer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.6.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -448,13 +434,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.13"
-  pull_to_refresh:
-    dependency: "direct dev"
-    description:
-      name: pull_to_refresh
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.6.3"
   quiver:
     dependency: transitive
     description:
@@ -474,6 +453,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smart_select:
+    dependency: "direct dev"
+    description:
+      name: smart_select
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2"
   source_span:
     dependency: transitive
     description:
@@ -523,13 +509,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
-  timeline_tile:
-    dependency: "direct dev"
-    description:
-      name: timeline_tile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   typed_data:
     dependency: transitive
     description:
@@ -544,13 +523,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-  velocity_x:
-    dependency: "direct dev"
-    description:
-      name: velocity_x
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   win32:
     dependency: transitive
     description:

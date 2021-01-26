@@ -1,5 +1,7 @@
+import 'package:Electchain/bidings/bindings.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/add_vote_option_screen.dart';
+import 'package:Electchain/screens/screens.dart';
 import 'package:Electchain/services/database.dart';
 import 'package:Electchain/widgets/candidate_box.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +168,9 @@ class _AddCandidateState extends State<AddCandidate> {
                 color: Colors.green, borderRadius: BorderRadius.circular(10.0)),
             child: FlatButton.icon(
                 onPressed: () {
-                  Get.to(AddVoteOptionWidget(), arguments: Get.arguments);
+                  Get.to(VoteDashboard(),
+                      arguments: Get.arguments,
+                      binding: VoteDashboardBinding());
                 },
                 icon: Icon(Icons.check, color: Colors.white),
                 label: Text(

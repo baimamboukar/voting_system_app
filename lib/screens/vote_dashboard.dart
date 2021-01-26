@@ -1,5 +1,8 @@
-import 'dart:async';
 import 'dart:math';
+import 'package:Electchain/controllers/election_controller.dart';
+import 'package:Electchain/controllers/user_controller.dart';
+import 'package:Electchain/models/models.dart';
+import 'package:Electchain/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -11,47 +14,60 @@ class VoteDashboard extends StatefulWidget {
 }
 
 class _VoteDashboardState extends State<VoteDashboard> {
-  static List<charts.Series<Vote, String>> _randomData() {
-    final random = Random();
-    final voteData = [
-      Vote('Flutter', random.nextInt(10000), Colors.black), //Davna
-      Vote('Vue', random.nextInt(10000), Colors.deepPurple), //Bana
-      Vote('Ember', random.nextInt(10000), Colors.indigo), //Grace
-      Vote('Svelte', random.nextInt(10000), Colors.blue), //Bisama
-      Vote('Polymer', random.nextInt(10000), Colors.deepOrange), //Abenti
-      Vote('React', random.nextInt(10000), Colors.brown), //Next
-      Vote('Angular', random.nextInt(10000), Colors.cyan), //Grace
-      Vote('Node', random.nextInt(10000), Colors.green),
-    ];
-    return [
-      charts.Series<Vote, String>(
-          id: 'Best Framework',
-          labelAccessorFn: (Vote votes, _) => votes.voter,
-          colorFn: (Vote votes, _) =>
-              charts.ColorUtil.fromDartColor(votes.voterColor),
-          domainFn: (Vote votes, _) => votes.voter,
-          measureFn: (Vote votes, _) => votes.voteCount,
-          data: voteData)
-    ];
-  }
+  ElectionModel election;
 
-  List<charts.Series> seriesList = _randomData();
-
-  var _currentIndex;
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex = 0;
-  }
-
-  void updateIndex(index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  List<dynamic> candidates;
+  getElection() async {
+    election = await DataBase().getElection(
+        Get.find<UserController>().user.id, Get.arguments[0].id.toString());
+    candidates = election.options;
+    print('Eleeeeeeeeeeection ${election.name}');
   }
 
   @override
   Widget build(BuildContext context) {
+    Color _candidateColor() {
+      Random _random = Random();
+      List<Color> _colors = [
+        Colors.black,
+        Colors.amberAccent,
+        Colors.indigo,
+        Colors.brown,
+        Colors.deepOrangeAccent,
+        Colors.lightGreenAccent,
+        Colors.tealAccent,
+        Colors.pinkAccent,
+        Colors.yellowAccent,
+        Colors.red,
+        Colors.purple,
+        Colors.lightBlue,
+      ];
+      int index = _random.nextInt(11);
+      return _colors[index];
+    }
+
+    getElection();
+    List<charts.Series<Vote, String>> _randomData() {
+      getElection();
+      List<Vote> voteData = List<Vote>();
+      for (var _candidate in candidates) {
+        Vote _vote =
+            Vote(_candidate['name'], _candidate['count'], _candidateColor());
+        voteData.add(_vote);
+      }
+      return [
+        charts.Series<Vote, String>(
+            id: 'Best Framework',
+            labelAccessorFn: (Vote votes, _) => votes.voter,
+            colorFn: (Vote votes, _) =>
+                charts.ColorUtil.fromDartColor(votes.voterColor),
+            domainFn: (Vote votes, _) => votes.voter,
+            measureFn: (Vote votes, _) => votes.voteCount,
+            data: voteData)
+      ];
+    }
+
+    List<charts.Series> seriesList = _randomData();
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -60,12 +76,12 @@ class _VoteDashboardState extends State<VoteDashboard> {
             title: Column(
               children: [
                 Text(
-                  'BEST WEB APP FRAMEWORK',
+                  election.name.toUpperCase(),
                   style:
                       GoogleFonts.yanoneKaffeesatz(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Lorem ipsum dolor si amet do set consectur',
+                  election.description,
                   style: GoogleFonts.yanoneKaffeesatz(
                       fontWeight: FontWeight.normal),
                 ),
@@ -78,7 +94,10 @@ class _VoteDashboardState extends State<VoteDashboard> {
                     Icons.content_copy,
                     color: Colors.white,
                   ),
-                  onPressed: null)
+                  onPressed: () {
+                    Get.find<ElectionController>()
+                        .copyAccessCode(election.accessCode);
+                  })
             ],
           ),
           SliverPadding(
@@ -87,9 +106,27 @@ class _VoteDashboardState extends State<VoteDashboard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _StatsBox(Icons.how_to_vote, 'VOTE', '8113'),
-                  _StatsBox(Icons.people_alt, 'CANDIDATES', '4'),
-                  _StatsBox(Icons.lock_clock, '12:55', '4H')
+                  Column(
+                    children: [
+                      ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.copy,
+                            color: Colors.white,
+                          ),
+                          label: Text('Copy Access Code')),
+                      ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.refresh,
+                            color: Colors.green,
+                          ),
+                          label: Text('Regenerate the Code')),
+                    ],
+                  ),
+                  _StatsBox(Icons.people_alt, 'CANDIDATES',
+                      election.options.length.toString()),
+                  _StatsBox(Icons.how_to_vote, 'TOTAL VOTES', '8113')
                 ],
               ),
             ),

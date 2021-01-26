@@ -6,13 +6,15 @@ class CandidateBox extends StatelessWidget {
   final String candidateName;
   final String candidateDesc;
   final Function onTap;
+  final double height;
 
   const CandidateBox(
       {Key key,
       this.candidateImgURL,
       this.candidateName,
       this.candidateDesc,
-      this.onTap})
+      this.onTap,
+      this.height})
       : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class CandidateBox extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: height,
         padding:
             const EdgeInsets.only(top: 6.0, left: 8.0, right: 8.0, bottom: 8.0),
         decoration: BoxDecoration(

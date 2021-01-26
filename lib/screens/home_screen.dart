@@ -1,10 +1,15 @@
 import 'package:Electchain/config/styles.dart';
+import 'package:Electchain/controllers/controllers.dart';
+import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/services/database.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ElectChain extends StatefulWidget {
   @override
@@ -94,6 +99,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController _electionAccessCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -103,7 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // SizedBox(height: 30.0),
-            Text("Enter a vote code"),
+            Text(
+              "ENTER A VOTE CODE",
+              style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.indigo),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,25 +130,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Form(
                       key: GlobalKey<FormState>(),
                       child: TextFormField(
-                        controller: TextEditingController(),
-                        keyboardType: TextInputType.number,
+                        controller: _electionAccessCodeController,
+                        keyboardType: TextInputType.text,
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Vote Code',
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(18.0)),
                           hintText: "Enter the election code",
                           hintStyle: TextStyle(
                               fontSize: 16.0, fontWeight: FontWeight.normal),
-                          prefixIcon: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Icon(
-                                Icons.verified_user,
-                              )),
+                          prefixIcon: Icon(
+                            Icons.lock,
+                          ),
                         ),
                       ),
                     )),
@@ -150,20 +160,62 @@ class _HomeScreenState extends State<HomeScreen> {
                           colors: [Colors.indigo, Colors.blue])),
                   child: FlatButton.icon(
                       height: 40.0,
-                      color: Colors.indigo,
-                      onPressed: null,
+                      onPressed: () async {
+                        FirebaseFirestore _firestore =
+                            FirebaseFirestore.instance;
+                        List<UserModel> allUsers = List<UserModel>();
+                        List<ElectionModel> allElections =
+                            List<ElectionModel>();
+                        var usersQuerySnap =
+                            _firestore.collection("users").get();
+                        usersQuerySnap.then((usersQuery) {
+                          var _allUsers = usersQuery.docs
+                              .map((_user) => Get.find<UserController>()
+                                  .fromDocumentSnapshot(_user))
+                              .toList();
+
+                          _allUsers.forEach((user) {
+                            print(user.email);
+                            _firestore
+                                .collection("users")
+                                .doc(user.id)
+                                .collection("elections")
+                                .get()
+                                .then((_userElectionsSnap) {
+                              var userElections = _userElectionsSnap.docs
+                                  .map((_election) =>
+                                      Get.find<ElectionController>()
+                                          .fromDocumentSnapshot(_election))
+                                  .toList();
+                              userElections.forEach((element) {
+                                allElections.add(element);
+                              });
+                              allElections.forEach((election) {
+                                if (election.accessCode ==
+                                    _electionAccessCodeController.text) {
+                                  print(
+                                      "Election found ${election.accessCode}");
+                                  Get.to(CastVote(), arguments: election);
+                                }
+                              });
+                            });
+                          });
+                          //print("All elections $allElections");
+                        });
+                      },
                       icon: Icon(
                         Icons.check_circle,
                         color: Colors.white,
                       ),
                       label: Text(
                         "Validate",
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
                       )),
                 )
               ],
             ),
             SizedBox(
-              height: 80.0,
+              height: 40.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

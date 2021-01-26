@@ -6,19 +6,19 @@ class ElectionModel {
   String accessCode;
   String name;
   String description;
-  UserModel owner;
   String startDate;
   String endDate;
   List<dynamic> options;
+  String id;
 
   ElectionModel(
       {this.name,
       this.description,
-      this.owner,
       this.startDate,
       this.endDate,
       this.accessCode,
-      this.options});
+      this.options,
+      this.id});
 
   ElectionModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     id:
@@ -29,11 +29,11 @@ class ElectionModel {
     doc['description'];
     startDate:
     doc['startDate'];
-    startDate:
-    doc['startDate'];
     endDate:
     doc['endDate'];
     options:
     doc['options'];
+    accessCode:
+    doc['accessCode'];
   }
 }

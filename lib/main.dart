@@ -1,5 +1,4 @@
 import 'package:Electchain/bidings/auth_binding.dart';
-import 'package:Electchain/config/styles.dart';
 import 'package:Electchain/utils/root.dart';
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
