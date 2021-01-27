@@ -21,7 +21,6 @@ class _VoteDashboardState extends State<VoteDashboard> {
     election = await DataBase().getElection(
         Get.find<UserController>().user.id, Get.arguments[0].id.toString());
     candidates = election.options;
-    print('Eleeeeeeeeeeection ${election.name}');
   }
 
   @override
