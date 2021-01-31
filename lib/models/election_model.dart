@@ -9,7 +9,9 @@ class ElectionModel {
   String startDate;
   String endDate;
   List<dynamic> options;
+  List<dynamic> voted;
   String id;
+  String owner;
 
   ElectionModel(
       {this.name,
@@ -18,22 +20,26 @@ class ElectionModel {
       this.endDate,
       this.accessCode,
       this.options,
+      this.voted,
+      this.owner,
       this.id});
 
-  ElectionModel.fromDocumentSnapshot(DocumentSnapshot doc) {
-    id:
-    doc.id;
-    name:
-    doc['name'];
-    description:
-    doc['description'];
-    startDate:
-    doc['startDate'];
-    endDate:
-    doc['endDate'];
-    options:
-    doc['options'];
-    accessCode:
-    doc['accessCode'];
-  }
+  // ElectionModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+  //   id:
+  //   doc.id;
+  //   name:
+  //   doc['name'];
+  //   description:
+  //   doc['description'];
+  //   startDate:
+  //   doc['startDate'];
+  //   endDate:
+  //   doc['endDate'];
+  //   options:
+  //   doc['options'];
+  //   accessCode:
+  //   doc['accessCode'];
+  //   voted:
+  //   doc['voted'];
+  // }
 }

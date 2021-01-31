@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: AuthBinding(),
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.zoom,
+      defaultTransition: Transition.noTransition,
       title: 'ElectChain',
       theme: ThemeData(
         textTheme:

@@ -3,7 +3,6 @@ import 'package:Electchain/screens/screens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:get/get.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class DataBase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -52,6 +51,7 @@ class DataBase {
         'startDate': election.startDate,
         'endDate': election.endDate,
         'accessCode': election.accessCode,
+        'voted': []
       }).then((reference) {
         _firestore.collection('users').doc(_uid).update({
           "owned_elections": FieldValue.arrayUnion([reference.id])
@@ -66,8 +66,8 @@ class DataBase {
     }
   }
 
-  Future<bool> addCandidate(
-      _electionId, _candidateName, _candidateDescription) async {
+  Future<bool> addCandidate(_electionId, _candidateImgUrl, _candidateName,
+      _candidateDescription) async {
     try {
       await _firestore
           .collection('users')
@@ -77,9 +77,10 @@ class DataBase {
           .update({
         "options": FieldValue.arrayUnion([
           {
+            'avatar': _candidateImgUrl,
             'name': _candidateName,
             'description': _candidateDescription,
-            'count': 0
+            'count': 1
           }
         ])
       });

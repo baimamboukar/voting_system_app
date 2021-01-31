@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ElectChain extends StatefulWidget {
@@ -225,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Get.to(NewVote());
                   },
                   child: ActionBox(
-                    action: "Vote",
+                    action: "Create Election",
                     description: "Create a new vote",
                     image: Icons.how_to_vote,
                   ),
@@ -241,14 +241,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ActionBox(
-                  action: "Election",
+                  action: "My Elections",
                   description: "Create a new vote",
                   image: Icons.ballot,
                 ),
                 ActionBox(
-                    action: "ElectChain",
+                    action: "FAQ",
                     description: "Create a new poll",
-                    image: Icons.info),
+                    image: Icons.description),
               ],
             ),
           ],

@@ -1,8 +1,16 @@
 import 'package:Electchain/controllers/auth_controller.dart';
 import 'package:Electchain/controllers/controllers.dart';
+import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+ElectionModel election;
+void getElection(userId, electionId) async {
+  election = await DataBase().getElection(userId, electionId);
+}
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -12,6 +20,7 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
+    Get.put(UserController());
     return Container(
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
@@ -59,24 +68,36 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     colors: [Colors.indigo, Colors.blue])),
           ),
           ListTile(
-            title: Text('Profile'),
-            subtitle: Text('User profile'),
-            leading: _leadingIcon(Icons.account_circle_sharp),
+            title: Text('Home'),
+            subtitle: Text('Go to homepage'),
+            leading: _leadingIcon(Icons.home),
             onLongPress: () {},
           ),
-          ListTile(
-            title: Text('Dashboard'),
-            subtitle: Text('Vote dashboard'),
-            leading: _leadingIcon(Icons.dashboard),
-            onTap: () {
-              Get.to(VoteDashboard());
-            },
-          ),
+          ExpansionTile(
+              title: Text("Owned Elections"),
+              subtitle: Text(
+                "Elections created",
+                style: TextStyle(color: Colors.black54),
+              ),
+              leading: _leadingIcon(Icons.how_to_vote),
+              children: Get.find<UserController>()
+                  .user
+                  .ownedElections
+                  .map((_election) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 58.0),
+                  child: ListTile(
+                    title: Text(_election),
+                    subtitle: Text("Election"),
+                  ),
+                );
+              }).toList()),
           ListTile(
             title: Text('Settings'),
             subtitle: Text('Modify settings'),
             leading: _leadingIcon(Icons.settings),
             onLongPress: () {},
+            onTap: () => Get.to(Settings()),
           ),
           ListTile(
             title: Text('Info'),

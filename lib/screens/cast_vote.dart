@@ -1,7 +1,10 @@
+import 'package:Electchain/controllers/controllers.dart';
+import 'package:Electchain/models/models.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CastVote extends StatefulWidget {
   @override
@@ -31,6 +34,21 @@ class _CastVoteState extends State<CastVote> {
                 icon: Icon(Icons.info),
                 onPressed: () => print("Display something")),
           ],
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Center(
+              child: Image(
+                image: AssetImage('assets/icons/logo.png'),
+                height: 80.0,
+                width: 300.0,
+              ),
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Divider(),
         ),
         SliverPadding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -150,9 +168,13 @@ class _CastVoteState extends State<CastVote> {
                                       ),
                                       SizedBox(height: 10.0),
                                       Text(
-                                        options[index]["count"].toString(),
+                                        "${options[index]["count"].toString()} VOTES COUNT",
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white54,
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       SizedBox(height: 10.0),
                                     ],
@@ -168,26 +190,107 @@ class _CastVoteState extends State<CastVote> {
                                 ),
                                 ElevatedButton.icon(
                                     onPressed: () {
-                                      print("Actions");
+                                      FirebaseFirestore _firestore =
+                                          FirebaseFirestore.instance;
+                                      List<ElectionModel> allElections =
+                                          List<ElectionModel>();
+                                      var usersQuerySnap =
+                                          _firestore.collection("users").get();
+                                      usersQuerySnap.then((usersQuery) {
+                                        var _allUsers = usersQuery.docs
+                                            .map((_user) =>
+                                                Get.find<UserController>()
+                                                    .fromDocumentSnapshot(
+                                                        _user))
+                                            .toList();
+
+                                        _allUsers.forEach((user) {
+                                          _firestore
+                                              .collection("users")
+                                              .doc(user.id)
+                                              .collection("elections")
+                                              .get()
+                                              .then((_userElectionsSnap) {
+                                            var userElections = _userElectionsSnap
+                                                .docs
+                                                .map((_election) => Get.find<
+                                                        ElectionController>()
+                                                    .fromDocumentSnapshot(
+                                                        _election))
+                                                .toList();
+                                            userElections.forEach((element) {
+                                              if (element.accessCode ==
+                                                  Get.arguments.accessCode) {
+                                                _firestore
+                                                    .collection("users")
+                                                    .doc(element.owner)
+                                                    .collection("elections")
+                                                    .doc(element.id)
+                                                    .update({
+                                                  "options":
+                                                      FieldValue.arrayRemove([
+                                                    {
+                                                      "name":
+                                                          element.options[index]
+                                                              ['name'],
+                                                      "description":
+                                                          element.options[index]
+                                                              ['description'],
+                                                      "count":
+                                                          element.options[index]
+                                                              ['count']
+                                                    }
+                                                  ])
+                                                }).then((value) => print(
+                                                        "DELETING SUCCESS"));
+
+                                                element.options[index]
+                                                    ['count']++;
+                                                var updatedOption =
+                                                    element.options[index];
+
+                                                _firestore
+                                                    .collection("users")
+                                                    .doc(element.owner)
+                                                    .collection("elections")
+                                                    .doc(element.id)
+                                                    .update({
+                                                  "options":
+                                                      FieldValue.arrayUnion([
+                                                    {
+                                                      "name":
+                                                          updatedOption['name'],
+                                                      "description":
+                                                          updatedOption[
+                                                              'description'],
+                                                      "count":
+                                                          updatedOption['count']
+                                                    }
+                                                  ])
+                                                }).then((value) => print(
+                                                        "ADDING SUCCESS"));
+                                              }
+                                            });
+                                            // allElections.forEach((election) {
+                                            //   print(Get.arguments.name);
+                                            //   if (election.accessCode ==
+                                            //       Get.arguments.accessCode) {
+                                            //   } else {
+                                            //     print("NOT FOUND YET");
+                                            //   }
+                                            // });
+                                          });
+                                        });
+                                        //print("All elections $allElections");
+                                      });
                                     },
                                     icon: Icon(Icons.how_to_vote),
                                     label: Text("Confirm"))
                               ],
                             ),
-                            barrierDismissible: false,
+                            barrierDismissible: true,
+                            arguments: Get.arguments,
                           );
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (context) {
-                          //       return AlertDialog(
-                          //         content: CandidateBox(
-                          //           height: 180.0,
-                          //           candidateName: options[index]['name'],
-                          //           candidateDesc: options[index]
-                          //               ['description'],
-                          //         ),
-                          //       );
-                          //     });
                         },
                       )));
             },

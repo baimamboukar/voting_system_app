@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/services/database.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,16 @@ class ElectionController extends GetxController {
 
   ElectionModel fromDocumentSnapshot(DocumentSnapshot doc) {
     ElectionModel _election = ElectionModel();
+
     _election.id = doc.id;
-    _election.accessCode = doc['accessCode'];
-    _election.description = doc['description'];
-    _election.endDate = doc['endDate'];
-    _election.name = doc['name'];
-    _election.options = doc['options'];
+    _election.accessCode = doc.data()['accessCode'];
+    _election.description = doc.data()['description'];
+    _election.endDate = doc.data()['endDate'];
+    _election.name = doc.data()['name'];
+    _election.options = doc.data()['options'];
     _election.startDate = doc['startDate'];
+    _election.voted = doc.data()['voted'];
+    _election.owner = doc.data()['owner'];
     return _election;
   }
 
@@ -44,6 +48,8 @@ class ElectionController extends GetxController {
     ElectionModel election = ElectionModel(
         accessCode: getRandomString(6),
         name: name,
+        voted: [],
+        owner: Get.find<UserController>().user.id,
         description: description,
         startDate: startDate,
         endDate: endDate);

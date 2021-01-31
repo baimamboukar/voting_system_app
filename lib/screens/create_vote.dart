@@ -140,17 +140,6 @@ class NewVote extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          tooltip: "Validate Election's creation",
-          onPressed: () {
-            _electionController.createElection(
-              _electionNameController.text,
-              _electionDescriptionController.text,
-              _electionStartDateController.text,
-              _electionEndDateController.text,
-            );
-          },
-          child: Icon(Icons.check_circle, color: Colors.green)),
     );
   }
 }

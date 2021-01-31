@@ -17,6 +17,7 @@ class UserController extends GetxController {
     _user.email = doc['email'];
     _user.name = doc['name'];
     _user.phoneNumber = doc['phonenumber'];
+    _user.ownedElections = doc['owned_elections'];
     return _user;
   }
 }
