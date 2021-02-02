@@ -9,18 +9,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Electchain/controllers/controllers.dart';
 
-var data;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-getData() async {
-  await DataBase()
-      .candidatesStream(
-          Get.find<UserController>().user.id, Get.arguments[0].id.toString())
-      .then((election) {
-    election.data()['options'].length == 0
-        ? data = null
-        : data = election.data()['options'];
-  });
-}
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class AddCandidate extends StatefulWidget {
   @override
@@ -32,14 +23,23 @@ class _AddCandidateState extends State<AddCandidate> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(slivers: [
+        SliverAppBar(
+          title: Text('ADD VOTE OPTIONS',
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.yanoneKaffeesatz(
+                  fontSize: 30.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
+        ),
         SliverToBoxAdapter(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 5.0),
                 child: Center(
                   child: Image(
+                    height: 80.0,
                     image: AssetImage('assets/icons/logo.png'),
                   ),
                 ),
@@ -57,115 +57,77 @@ class _AddCandidateState extends State<AddCandidate> {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
-              Text(
-                'CURRENT CANDIDATES',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
               SizedBox(
-                height: 30.0,
+                height: 10.0,
+                child: Divider(),
               ),
             ],
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.all(15.0),
-          sliver: data == null
-              ? SliverToBoxAdapter(
-                  child: Column(children: [
-                    Icon(
-                      Icons.wifi_off,
-                      size: 100.0,
-                    ),
-                    Text('NO CANDIDATE ADDED YET',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        )),
-                    Text(
-                      'Add candidates or options to your vote to finalise the process',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ]),
-                )
-              : SliverGrid(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent:
-                        MediaQuery.of(context).size.width * 0.50,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                    childAspectRatio: 1.0,
-                  ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return CandidateBox(
-                      candidateName: data[index]['name'],
-                      candidateDesc: data[index]['description'],
-                      onTap: () {
-                        Get.bottomSheet(Container(
-                          color: Colors.white,
-                          height: 60.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              FlatButton.icon(
-                                  onPressed: null,
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: Colors.green,
-                                  ),
-                                  label: Text('Edit')),
-                              FlatButton.icon(
-                                  onPressed: () {
-                                    setState(() {});
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Confirmation'),
-                                            content: Text('Are you sure ?'),
-                                            actions: [
-                                              FlatButton(
-                                                child: Text('Yes'),
-                                                onPressed: null,
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  label: Text('Delete'))
-                            ],
+          padding: const EdgeInsets.all(20.0),
+          sliver: StreamBuilder(
+            key: GlobalKey(debugLabel: "StreamKey"),
+            stream: _firestore
+                .collection("users")
+                .doc(Get.find<UserController>().user.id)
+                .collection("elections")
+                .doc(Get.arguments[0].id.toString())
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data.data()['options'];
+                return data.length < 1
+                    ? SliverToBoxAdapter(
+                        child: Column(children: [
+                          Icon(
+                            Icons.wifi_off,
+                            size: 100.0,
                           ),
-                        ));
-                      },
-                    );
-                  }, childCount: data.length)),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Get.to(AddVoteOptionWidget(), arguments: Get.arguments);
-                },
-                label: Text('Add Candidate'),
-                icon: Icon(Icons.group_add),
-              ),
-            ),
+                          Text('NO CANDIDATE ADDED YET',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              )),
+                          Text(
+                            'Add candidates or options to your vote to finalise the process',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ]),
+                      )
+                    : SliverGrid(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent:
+                              MediaQuery.of(context).size.width * 0.50,
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 10.0,
+                          childAspectRatio: 1.0,
+                        ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return CandidateBox(
+                            candidateImgURL: data[index]['avatar'],
+                            candidateName: data[index]['name'],
+                            candidateDesc: data[index]['description'],
+                            onTap: () {},
+                          );
+                        }, childCount: data.length));
+              } else {
+                return SliverToBoxAdapter(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+            },
           ),
         ),
         SliverToBoxAdapter(
             child: Padding(
           padding: const EdgeInsets.only(
-              left: 45.0, right: 75.0, top: 40.0, bottom: 0.0),
+              left: 45.0, right: 75.0, top: 40.0, bottom: 20.0),
           child: Container(
             height: 50.0,
             alignment: Alignment.bottomCenter,
             decoration: BoxDecoration(
-                color: Colors.green, borderRadius: BorderRadius.circular(10.0)),
+                color: Colors.indigo,
+                borderRadius: BorderRadius.circular(10.0)),
             child: FlatButton.icon(
                 onPressed: () {
                   Get.to(VoteDashboard(),
@@ -174,27 +136,20 @@ class _AddCandidateState extends State<AddCandidate> {
                 },
                 icon: Icon(Icons.check, color: Colors.white),
                 label: Text(
-                  'RUN THE ELECTION',
+                  'Run Election',
                   style: TextStyle(fontSize: 18.0, color: Colors.white),
                 )),
           ),
         )),
       ]),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Refresh the list of the candidates',
+        tooltip: 'Add Candidates',
+        backgroundColor: Colors.green,
         onPressed: () {
-          getData();
-          setState(() {});
-          getData();
-          setState(() {});
-          getData();
-          setState(() {});
-          getData();
-          setState(() {});
+          Get.to(AddVoteOptionWidget(), arguments: Get.arguments);
         },
         child: Icon(
-          Icons.refresh_outlined,
-          color: Colors.green,
+          Icons.group_add,
         ),
       ),
     );

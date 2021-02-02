@@ -1,5 +1,6 @@
 import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
+import 'package:Electchain/screens/realtime_result.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class _CastVoteState extends State<CastVote> {
   @override
   Widget build(BuildContext context) {
     List options = Get.arguments.options;
+    var target;
     return Scaffold(
         body: CustomScrollView(
       slivers: [
@@ -101,7 +103,7 @@ class _CastVoteState extends State<CastVote> {
                         leading: CircleAvatar(
                             radius: 30.0,
                             backgroundImage:
-                                AssetImage('assets/icons/user.jpeg')),
+                                NetworkImage(options[index]["avatar"])),
                         trailing: Text(
                           "${options[index]["count"].toString()} Votes",
                           style: TextStyle(
@@ -150,8 +152,8 @@ class _CastVoteState extends State<CastVote> {
                                           ),
                                           child: CircleAvatar(
                                               radius: 60.0,
-                                              backgroundImage: AssetImage(
-                                                  'assets/icons/user.jpeg')),
+                                              backgroundImage: NetworkImage(
+                                                  options[index]["avatar"])),
                                         ),
                                       ),
                                       SizedBox(height: 15.0),
@@ -221,6 +223,9 @@ class _CastVoteState extends State<CastVote> {
                                             userElections.forEach((element) {
                                               if (element.accessCode ==
                                                   Get.arguments.accessCode) {
+                                                setState(() {
+                                                  target = element;
+                                                });
                                                 _firestore
                                                     .collection("users")
                                                     .doc(element.owner)
@@ -230,6 +235,9 @@ class _CastVoteState extends State<CastVote> {
                                                   "options":
                                                       FieldValue.arrayRemove([
                                                     {
+                                                      "avatar":
+                                                          element.options[index]
+                                                              ['avatar'],
                                                       "name":
                                                           element.options[index]
                                                               ['name'],
@@ -241,8 +249,7 @@ class _CastVoteState extends State<CastVote> {
                                                               ['count']
                                                     }
                                                   ])
-                                                }).then((value) => print(
-                                                        "DELETING SUCCESS"));
+                                                });
 
                                                 element.options[index]
                                                     ['count']++;
@@ -258,6 +265,8 @@ class _CastVoteState extends State<CastVote> {
                                                   "options":
                                                       FieldValue.arrayUnion([
                                                     {
+                                                      "avatar": updatedOption[
+                                                          'avatar'],
                                                       "name":
                                                           updatedOption['name'],
                                                       "description":
@@ -267,8 +276,10 @@ class _CastVoteState extends State<CastVote> {
                                                           updatedOption['count']
                                                     }
                                                   ])
-                                                }).then((value) => print(
-                                                        "ADDING SUCCESS"));
+                                                }).then((value) {
+                                                  Get.to(RealtimeResult(),
+                                                      arguments: target);
+                                                });
                                               }
                                             });
                                             // allElections.forEach((election) {

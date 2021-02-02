@@ -3,6 +3,7 @@ import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/screens.dart';
 import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/screens/user_elections.dart';
 import 'package:Electchain/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,24 +37,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             accountName: Obx(
               () => Text(Get.find<UserController>().user.name),
             ),
-            accountEmail: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Obx(
-                  () => Text(Get.find<UserController>().user.email,
-                      style: TextStyle(color: Colors.white54)),
-                ),
-                Obx(
-                  () => Text(Get.find<UserController>().user.phoneNumber,
-                      style: TextStyle(color: Colors.white54)),
-                ),
-              ],
+            accountEmail: Obx(
+              () => Text(Get.find<UserController>().user.email,
+                  style: TextStyle(color: Colors.white54)),
             ),
             currentAccountPicture: CircleAvatar(
-              radius: 60.0,
-              backgroundImage: AssetImage('assets/icons/user.jpeg'),
-            ),
+                radius: 60.0,
+                backgroundImage:
+                    NetworkImage(Get.find<UserController>().user.avatar)),
             otherAccountsPictures: <Widget>[
               Icon(
                 Icons.notification_important,
@@ -73,25 +64,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: _leadingIcon(Icons.home),
             onLongPress: () {},
           ),
-          ExpansionTile(
-              title: Text("Owned Elections"),
-              subtitle: Text(
-                "Elections created",
-                style: TextStyle(color: Colors.black54),
-              ),
-              leading: _leadingIcon(Icons.how_to_vote),
-              children: Get.find<UserController>()
-                  .user
-                  .ownedElections
-                  .map((_election) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 58.0),
-                  child: ListTile(
-                    title: Text(_election),
-                    subtitle: Text("Election"),
-                  ),
-                );
-              }).toList()),
+          ListTile(
+            title: Text('Owned Elections'),
+            subtitle: Text('My elections'),
+            leading: _leadingIcon(Icons.how_to_vote),
+            onLongPress: () {},
+            onTap: () => Get.to(UserElections()),
+          ),
           ListTile(
             title: Text('Settings'),
             subtitle: Text('Modify settings'),
@@ -103,7 +82,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             title: Text('Info'),
             subtitle: Text('About ElectChain'),
             leading: _leadingIcon(Icons.info),
-            trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               showAboutDialog(
                   context: context,
@@ -134,6 +112,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           Spacer(),
           Image(
             // color: Color,
+            height: 70.0,
             image: AssetImage('assets/icons/logo.png'),
             filterQuality: FilterQuality.high,
           ),

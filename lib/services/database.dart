@@ -18,7 +18,8 @@ class DataBase {
         "name": user.name,
         "phonenumber": user.phoneNumber,
         "email": user.email,
-        "owned_elections": []
+        "owned_elections": [],
+        "avatar": user.avatar
       });
       return true;
     } catch (err) {
@@ -51,7 +52,8 @@ class DataBase {
         'startDate': election.startDate,
         'endDate': election.endDate,
         'accessCode': election.accessCode,
-        'voted': []
+        'voted': [],
+        'owner': election.owner
       }).then((reference) {
         _firestore.collection('users').doc(_uid).update({
           "owned_elections": FieldValue.arrayUnion([reference.id])
@@ -114,7 +116,24 @@ class DataBase {
     return Get.find<ElectionController>().fromDocumentSnapshot(data);
   }
 
-  Future<ElectionModel> getElectionByAccessCode(String _electionID) async {
-    return indexedElection;
+  // Future<ElectionModel> getElectionByAccessCode(String _electionID) async {
+  //   return indexedElection;
+  // }
+
+  Stream<ElectionModel> getElections(userID) {
+    var snaps;
+    _firestore.collection("users").doc(userID).snapshots().map((user) {
+      snaps = user.data()['owned_elections'].map((electionOwned) {
+        return _firestore
+            .collection("users")
+            .doc(userID)
+            .collection("elections")
+            .doc(electionOwned)
+            .snapshots();
+      });
+      print(snaps);
+    });
+    print("Snaaaaaaaaaps oooooooh $snaps");
+    return snaps;
   }
 }

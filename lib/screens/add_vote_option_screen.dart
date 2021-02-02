@@ -14,12 +14,19 @@ class AddVoteOptionWidget extends StatefulWidget {
 }
 
 class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
-  GlobalKey<ScaffoldState> _key = GlobalKey();
+  var arguments = Get.arguments;
   File _imagePicked;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   UploadTask _uploadTask;
   double progressPercent = 0.0;
   var imgURL;
+  var futureImgURL;
+  @override
+  void initState() {
+    super.initState();
+    arguments = arguments ?? Get.arguments;
+  }
+
   void startUpload() async {
     String filePath = "election_pics/${DateTime.now()}.png";
     var reference = _storage.ref().child(filePath);
@@ -28,20 +35,12 @@ class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
       _uploadTask = reference.putFile(_imagePicked);
       _uploadTask.then((snapshot) {
         setState(() {
-          imgURL = Future.value(snapshot.ref.getDownloadURL());
-          Get.back();
-          print("Image URL ${imgURL.toString()}");
+          snapshot.ref.getDownloadURL().then((_imgURL) => imgURL = _imgURL);
+          futureImgURL = Future.value(snapshot.ref.getDownloadURL());
+          Get.back(canPop: false);
         });
-        print("Image URL ${imgURL.toString()}");
       });
     });
-
-    // await _uploadTask.then((snapshot) {
-    //   setState(() {
-    //     imgURL = snapshot.ref.getDownloadURL();
-    //   });
-    //   print("Image URL $imgURL");
-    // });
   }
 
   Future<void> pickImage(ImageSource source) async {
@@ -50,7 +49,7 @@ class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
     setState(() {
       if (selectedImage != null) {
         _imagePicked = File(selectedImage.path);
-        Navigator.pop(context);
+        //Navigator.pop(context);
         Get.dialog(
             AlertDialog(
               // contentPadding: const EdgeInsets.only(top: 200.0, bottom: 200.0),
@@ -125,19 +124,18 @@ class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("Arrrrrrrrguments ${Get.arguments}");
     var _candidateNameController = TextEditingController();
     var _candidateDescriptionController = TextEditingController();
     Get.put(ElectionController());
 
     return Scaffold(
       backgroundColor: Colors.indigo[100],
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 50.0),
               child: Center(
                 child: Image(
                   image: AssetImage('assets/icons/logo.png'),
@@ -195,7 +193,7 @@ class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
                 });
               },
               child: FutureBuilder(
-                  future: Future.value(imgURL),
+                  future: Future.value(futureImgURL),
                   builder: (context, state) {
                     if (state.hasData) {
                       return CircleAvatar(
@@ -245,9 +243,16 @@ class _AddVoteOptionWidgetState extends State<AddVoteOptionWidget> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo,
         onPressed: () async {
-          imgURL = imgURL ?? "gs://electchain-8ea68.appspot.com/avatar.jpg";
+          print("Arrrrrrrrguments befor calling database: $arguments");
+          print("Get befor calling database: ${arguments[0].id.toString()}");
+          // imgURL = imgURL == null
+          //     ? "gs://electchain-8ea68.appspot.com/avatar.jpg"
+          //     : imgURL;
+          imgURL = imgURL ??
+              "electchain-8ea68.appspot.com/election_pics/2021-01-31 16:55:57.176426.png";
+          print("URRRRRRRRRRRRL $imgURL");
           var result = await DataBase().addCandidate(
-              Get.arguments[0].id.toString(),
+              arguments[0].id.toString(),
               imgURL,
               _candidateNameController.text,
               _candidateDescriptionController.text);

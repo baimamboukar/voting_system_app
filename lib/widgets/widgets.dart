@@ -5,3 +5,4 @@ export 'input_field.dart';
 export 'date_picker.dart';
 export 'candidate_box.dart';
 export 'uploader.dart';
+export 'offline_widget.dart';

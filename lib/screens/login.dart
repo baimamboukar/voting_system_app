@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

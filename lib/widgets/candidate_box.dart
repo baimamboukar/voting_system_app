@@ -39,13 +39,17 @@ class CandidateBox extends StatelessWidget {
               Center(
                 child: CircleAvatar(
                     radius: 40.0,
-                    backgroundImage: AssetImage('assets/icons/user.jpeg')),
+                    backgroundImage: NetworkImage(candidateImgURL)),
               ),
-              Text(candidateName,
-                  style: TextStyle(
-                      color: Colors.indigo,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold)),
+              Center(
+                child: Text(candidateName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.indigo,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold)),
+              ),
               Text(
                 candidateDesc,
                 maxLines: 2,

@@ -2,6 +2,7 @@ import 'package:Electchain/config/styles.dart';
 import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/screens.dart';
+import 'package:Electchain/screens/user_elections.dart';
 import 'package:Electchain/services/database.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -240,10 +241,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ActionBox(
-                  action: "My Elections",
-                  description: "Create a new vote",
-                  image: Icons.ballot,
+                InkWell(
+                  onTap: () => Get.to(UserElections()),
+                  child: ActionBox(
+                    action: "My Elections",
+                    description: "Create a new vote",
+                    image: Icons.ballot,
+                  ),
                 ),
                 ActionBox(
                     action: "FAQ",

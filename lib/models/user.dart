@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
+  String avatar;
   String id;
   String name;
   String phoneNumber;
@@ -9,7 +10,12 @@ class UserModel {
   List<dynamic> ownedElections;
 
   UserModel(
-      {this.id, this.name, this.phoneNumber, this.email, this.ownedElections});
+      {this.avatar,
+      this.id,
+      this.name,
+      this.phoneNumber,
+      this.email,
+      this.ownedElections});
 
   UserModel fromDocumentSnapshot(DocumentSnapshot doc) {
     UserModel _user = UserModel();
@@ -18,6 +24,7 @@ class UserModel {
     _user.name = doc['name'];
     _user.phoneNumber = doc['phonenumber'];
     _user.ownedElections = doc['owned_elections'];
+    _user.avatar = doc['avatar'];
     return _user;
   }
 }

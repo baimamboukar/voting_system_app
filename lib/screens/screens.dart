@@ -6,3 +6,4 @@ export 'login.dart';
 export 'add_candidate.dart';
 export 'cast_vote.dart';
 export 'settings.dart';
+export 'faq.dart';

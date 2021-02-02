@@ -17,7 +17,7 @@ class AuthController extends GetxController {
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
-  void createUser(name, phoneNumber, email, password) async {
+  void createUser(imgURL, name, phoneNumber, email, password) async {
     try {
       var _authResult = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -25,6 +25,7 @@ class AuthController extends GetxController {
       //Create a user in firestore
       UserModel _user = UserModel(
           id: _authResult.user.uid,
+          avatar: imgURL,
           name: name,
           phoneNumber: phoneNumber,
           email: email);
@@ -33,7 +34,7 @@ class AuthController extends GetxController {
         Get.back();
       }
     } catch (err) {
-      Get.snackbar('Processing Error', err.message);
+      Get.snackbar('Processing Error', err.toString());
     }
   }
 
@@ -44,7 +45,6 @@ class AuthController extends GetxController {
 
       Get.find<UserController>().user =
           await DataBase().getUser(_authResult.user.uid);
-      print(await DataBase().getUser(_authResult.user.uid));
       Get.back();
     } catch (err) {
       Get.snackbar('Processing Error', err.message);
