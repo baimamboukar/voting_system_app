@@ -1,16 +1,14 @@
-# electchain
+# VOTING SYSTEM APP
 
-A new Flutter project.
+A voting system app made with flutter and firebase
 
 ## Getting Started
+*Clone the project* `git clone https://github.com/baimamboukar/voting_system_app.git`
+*move inside the extracted folder and execute* `flutter pub get`
+*launch the app* `flutter run`
 
-This project is a starting point for a Flutter application.
+## DEMO
+Here are some views of the app
 
-A few resources to get you started if this is your first Flutter project:
+![Electchain](https://user-images.githubusercontent.com/49169158/124393913-bb73ee00-dcf4-11eb-9845-2af9dc7c5a31.png)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
