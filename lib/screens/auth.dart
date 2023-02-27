@@ -311,7 +311,7 @@ class _AuthScreen extends State<AuthScreen> {
                     SizedBox(
                       height: 30.0,
                     ),
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () => Get.to(Login()),
                       child: Text(
                         'Already have account ? Sign In there',

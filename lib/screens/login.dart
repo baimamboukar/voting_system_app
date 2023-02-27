@@ -3,8 +3,6 @@ import 'package:Electchain/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:Electchain/widgets/widgets.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -77,8 +75,10 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: 30.0,
               ),
-              FlatButton(
-                onPressed: () => Get.to(AuthScreen()),
+              TextButton(
+                onPressed: () => Get.to(
+                  AuthScreen(),
+                ),
                 child: Text(
                   'Dont have an account ? Sign up there',
                   style: TextStyle(color: Colors.red, fontSize: 18.0),

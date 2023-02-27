@@ -1,5 +1,4 @@
 import 'package:Electchain/controllers/controllers.dart';
-import 'package:Electchain/controllers/election_controller.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -107,7 +106,7 @@ class NewVote extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.indigo[400],
                   borderRadius: BorderRadius.circular(18.0)),
-              child: FlatButton.icon(
+              child: ElevatedButton.icon(
                 label: Text(
                   'Continue',
                   style: TextStyle(fontSize: 22.0, color: Colors.white),

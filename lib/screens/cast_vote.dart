@@ -1,7 +1,6 @@
 import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/realtime_result.dart';
-import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -184,7 +183,7 @@ class _CastVoteState extends State<CastVote> {
                                 ),
                               ),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   child: Text("No"),
                                   onPressed: () {
                                     Get.back();

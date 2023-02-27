@@ -3,13 +3,10 @@ import 'package:Electchain/controllers/controllers.dart';
 import 'package:Electchain/models/models.dart';
 import 'package:Electchain/screens/screens.dart';
 import 'package:Electchain/screens/user_elections.dart';
-import 'package:Electchain/services/database.dart';
 import 'package:Electchain/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ElectChain extends StatefulWidget {
@@ -159,14 +156,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [Colors.indigo, Colors.blue])),
-                  child: FlatButton.icon(
-                      height: 40.0,
+                  child: ElevatedButton.icon(
+                      //height: 40.0,
                       onPressed: () async {
                         FirebaseFirestore _firestore =
                             FirebaseFirestore.instance;
-                        List<UserModel> allUsers = List<UserModel>();
-                        List<ElectionModel> allElections =
-                            List<ElectionModel>();
+                        List<UserModel> allUsers = <UserModel>[];
+                        List<ElectionModel> allElections = <ElectionModel>[];
                         var usersQuerySnap =
                             _firestore.collection("users").get();
                         usersQuerySnap.then((usersQuery) {
