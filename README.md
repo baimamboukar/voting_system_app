@@ -11,17 +11,59 @@
 A voting system app made with flutter and firebase
 ### Easy-to-use electronic voting mobile application to run safe, secured and transparent elections.Users can cast their vote only once and view the results in real-time.
 
-## IMPORTANCE
+## Importance
 - Reduce time and cost for elections
 - Run elections in a safe manner without any tampering of votes
 - Conduct elections in a transparent way by allowing voters to see the
 results in real-time
 
-## GETTING STARTED
+
+## Features
+- Create elections or vote
+- Sharing elections with authorized voters
+- Selecting desired canditate or option and casting votes
+- Displaying votes results in real-time
+
+--- 
+
+## Getting Started
+
 - Clone the project *git clone https://github.com/baimamboukar/voting_system_app.git*
 - move inside the extracted folder and execute *flutter pub get*
 - launch the app *flutter run*
 
+---
+
+## Contributing
+
+When contributing to cosmosense, please follow these guidelines
+
+- Make sure your code is well-documented and easy to understand.
+
+- Write clean, readable, and maintainable code.
+Follow the project's coding style and conventions.
+
+- Test your changes thoroughly before submitting a pull request.
+
+- Make sure your changes do not break existing functionality.
+
+- Be respectful and constructive when providing feedback on others' contributions.
+
+- If you have any questions or need further assistance, please contact the maintainers at 
+[![Email](https://img.shields.io/badge/Contact-email-red)](mailto:baimamboukar@gmail.com)
+
+We appreciate your contributions and look forward to working with you!
+---
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+## Contributors
+
+[![](https://contrib.rocks/image?repo=baimamboukar/voting_system_app)](https://github.com/baimamboukar/cosmosense/graphs/contributors)
+
+---
 
 ## Made with 💙 using 
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
